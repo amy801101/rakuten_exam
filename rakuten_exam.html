@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>rakuten_exam</title>
+</head>
+<body>
+	<p>
+		Q1. Write a function that takes a string as input and returns the string reversed.
+		Example: Given s = "hello", return "olleh".
+	</p>
+	<p>
+		Q2. Implement int sqrt(int x).
+		Compute and return the square root of x.
+		Example: input 16 , output 4 
+	</p>
+	<p>
+		Q3. Given a positive integer num, write a function which returns True if num is a perfect square else False.
+		Note: Do not use any built-in library function such as sqrt.
+		Example 1:
+		Input: 16
+		Returns: True
+		 
+		Example 2:
+		Input: 14
+		Returns: False
+	</p>
+	<p>
+		Q4. Given a 2D board and a word, find if the word exists in the grid.
+		The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+		For example, Given board =
+		[
+		  ['A','B','C','E'],
+		  ['S','F','C','S'],
+		  ['A','D','E','E']
+		]
+		word = "ABCCED", -> returns true,
+		word = "SEE", -> returns true,
+		word = "ABCB", -> returns false.
+	</p>
+	<p>
+		Q5. Calculate the sum of two integers a and b, but you are not allowed to use the operator + and -.
+		Example: Given a = 1 and b = 2, return 3.
+	</p>
+	<script>
+		// var board = [
+		//   ['A','B','C','E'],
+		//   ['S','F','C','S'],
+		//   ['A','D','E','E']
+		// ];
+		// console.log(question4(board, 'FCEDASABF'));
+
+		function qusetion1 (str){
+			var ans = str.split("").reverse().join("");
+			return ans;
+		}
+
+		function question2 (number){
+			var ans = Math.sqrt(number);
+			return ans;
+		}
+
+		function question3 (number){
+			for(var i = 1; i < number; i++){
+				if(i*i == number){
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function question4 (board, word){
+			if(!word){
+				return true;
+			}
+
+			var character = word.split("")[0];
+
+			for(var i = 0; i < board.length; i++){
+				for(var j = 0; j < board[i].length; j++){
+					if(board[i][j] == character){
+						var trace_board = [];
+						trace_board.push({row: i, column: j});
+						if(findAdjacentWord(board, word.substring(1), i, j, trace_board)){
+							console.log(trace_board);
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+
+		}
+
+		function findAdjacentWord (board, word, row, column, trace_board) {
+			if(!word){
+				return true;
+			}
+
+			var character = word.split("")[0];
+			
+			//up
+			if((row > 0) && (board[row-1][column] == character) 
+					&& !inTraceBoard({ row:row-1, column: column}, trace_board)){
+				trace_board.push({ row:row-1, column: column});
+
+				if(findAdjacentWord(board, word.substring(1), row-1, column, trace_board)){
+					//found
+					return true;
+				} else {
+					trace_board.pop();
+				}
+			}
+			
+			//down
+			if((row < board.length-1) && (board[row+1][column] == character)
+					&& !inTraceBoard({ row:row+1, column: column}, trace_board)){
+				trace_board.push({ row:row+1, column: column});
+
+				if(findAdjacentWord(board, word.substring(1), row+1, column, trace_board)){
+					//found
+					return true;
+				} else {
+					trace_board.pop();
+				}
+			}
+
+			//right
+			if((column < board[row].length-1) && (board[row][column+1] == character)
+					&& !inTraceBoard({ row:row, column: column+1}, trace_board)){
+				trace_board.push({ row:row, column: column+1});
+
+				if(findAdjacentWord(board, word.substring(1), row, column+1, trace_board)){
+					//found
+					return true;
+				} else {
+					trace_board.pop();
+				}
+			}
+
+			//left
+			if((column > 0) && (board[row][column-1] == character)
+					&& !inTraceBoard({ row:row, column: column-1}, trace_board)){
+				trace_board.push({ row:row, column: column-1});
+
+				if(findAdjacentWord(board, word.substring(1), row, column-1, trace_board)){
+					//found
+					return true;
+				} else {
+					trace_board.pop();
+				}
+			}
+			return false;
+		}
+
+		function inTraceBoard (pos_obj, trace_board) {
+			for(var i = 0 ; i < trace_board.length; i++){
+				if(trace_board[i].row == pos_obj.row
+					&& trace_board[i].column == pos_obj.column){
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function question5 (x, y) {
+			while (y != 0)
+			{
+				var adding_without_carry = x ^ y;
+			    var carry = x & y;  
+
+			    x = adding_without_carry; 
+			    y = carry << 1;
+			}
+    		return x;
+		}
+	</script>
+</body>
+</html>
